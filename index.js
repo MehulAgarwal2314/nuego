@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
   
     const query = `
       SELECT *
-      FROM bus_schedule
+      FROM new_table
       WHERE origin_city = ? AND destination_city = ?;
     `;
   
