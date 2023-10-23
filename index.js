@@ -1,28 +1,22 @@
 const express = require('express');
-// const mysql= require('mysql'); // Require the mysql package
-const { createPool } = require('mysql2'); // Use mysql2
+const { createPool } = require('mysql2');
 const app = express();
 const port = process.env.PORT||3000;
 const cors = require('cors');
 
-// Use CORS middleware to enable cross-origin requests
 app.use(cors());
 app.use(express.json());
 
-// Create a MySQL database connection
 const pool = createPool({
-    // host: 'localhost', // Replace with your database host
     host:'us-cdbr-east-06.cleardb.net',
-    user: 'b3f07c73b6fcde', // Replace with your database user
-    password: 'c1e4a7a3', // Replace with your database password
-    database: 'heroku_cc9c31584bb6343', // Replace with your database name
+    user: 'b3f07c73b6fcde',
+    password: 'c1e4a7a3', 
+    database: 'heroku_cc9c31584bb6343',
     connectionLimit:10,
   });
 
 app.get('/', (req, res) => {
     const { departure, destination } = req.query;
-  
-    // Validate the input parameters
     if (!departure || !destination) {
       return res.status(400).json({ error: 'Departure and destination are required.' });
     }
