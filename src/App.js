@@ -13,8 +13,6 @@ function App() {
     e.preventDefault();
 
     try {
-      // Make an API request to your backend to get bus schedules based on departure and destination.
-      // const response = await fetch(`http://localhost:3000/api/bus-schedules?departure=${departure}&destination=${destination}`);
       const response = await fetch(`  https://nuego1-d9f344fa00ee.herokuapp.com?departure=${departure}&destination=${destination}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -56,8 +54,6 @@ function App() {
   </div>
 </section>
 
-
-   {/* Display search results here */}
    <section className="search-results">
             {results.map((result) => (
               <div key={result.id}>
