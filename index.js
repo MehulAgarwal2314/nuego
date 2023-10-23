@@ -19,7 +19,7 @@ const pool = createPool({
     connectionLimit:10,
   });
 
-app.get('/api/bus-schedules', (req, res) => {
+app.get('/', (req, res) => {
     const { departure, destination } = req.query;
   
     // Validate the input parameters
