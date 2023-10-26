@@ -15,25 +15,43 @@ const pool = createPool({
     connectionLimit:10,
   });
 
-app.get('/', (req, res) => {
-    const { departure, destination } = req.query;
-    if (!departure || !destination) {
-      return res.status(400).json({ error: 'Departure and destination are required.' });
-    }
+// app.get('/', (req, res) => {
+//     const { departure, destination } = req.query;
+//     if (!departure || !destination) {
+//       return res.status(400).json({ error: 'Departure and destination are required.' });
+//     }
   
+//     const query = `
+//       SELECT *
+//       FROM new_table
+//       WHERE origin_city = ? AND destination_city = ?;
+//     `;
+  
+//     pool.query(query, [departure, destination], (err, result) => {
+//       if (err) {
+//         return res.status(500).json({ error: 'Database error.' });
+//       }
+//       return res.json(result);
+//     });
+//   });
+
+  app.get('/', (req, res) => {
     const query = `
-      SELECT *
-      FROM new_table
-      WHERE origin_city = ? AND destination_city = ?;
+        SELECT DISTINCT origin_city, destination_city
+        FROM new_table;
     `;
-  
-    pool.query(query, [departure, destination], (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'Database error.' });
-      }
-      return res.json(result);
+
+    pool.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error.' });
+        }
+        const cities = {
+            origins: result.map((row) => row.origin_city),
+            destinations: result.map((row) => row.destination_city),
+        };
+        return res.json(cities);
     });
-  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
