@@ -15,25 +15,25 @@ const pool = createPool({
     connectionLimit:10,
   });
 
-// app.get('/', (req, res) => {
-//     const { departure, destination } = req.query;
-//     if (!departure || !destination) {
-//       return res.status(400).json({ error: 'Departure and destination are required.' });
-//     }
+app.get('/results', (req, res) => {
+    const { departure, destination } = req.query;
+    if (!departure || !destination) {
+      return res.status(400).json({ error: 'Departure and destination are required.' });
+    }
   
-//     const query = `
-//       SELECT *
-//       FROM new_table
-//       WHERE origin_city = ? AND destination_city = ?;
-//     `;
+    const query = `
+      SELECT *
+      FROM new_table
+      WHERE origin_city = ? AND destination_city = ?;
+    `;
   
-//     pool.query(query, [departure, destination], (err, result) => {
-//       if (err) {
-//         return res.status(500).json({ error: 'Database error.' });
-//       }
-//       return res.json(result);
-//     });
-//   });
+    pool.query(query, [departure, destination], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error.' });
+      }
+      return res.json(result);
+    });
+  });
 
   app.get('/', (req, res) => {
     const query = `
