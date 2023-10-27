@@ -16,7 +16,7 @@ function App() {
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/cities")
+    fetch("https://nuego1-d9f344fa00ee.herokuapp.com/cities")
       .then((response) => response.json())
       .then((data) => {
         console.log("Cities data received:", data);
@@ -34,7 +34,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/results?departure=${departure}&destination=${destination}`
+        `https://nuego1-d9f344fa00ee.herokuapp.com/results?departure=${departure}&destination=${destination}`
       );
 
       if (!response.ok) {
