@@ -52,6 +52,49 @@ app.get('/results', (req, res) => {
         return res.json(cities);
     });
 });
+    
+app.get('/cities', (req, res) => {
+  const query = `
+    SELECT DISTINCT origin_city, destination_city, ind
+    FROM new_table;
+  `;
+
+  pool.query(query, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error.' });
+    }
+
+    const cities = {
+      origins: [],
+      destinations: {},
+    };
+
+    result.forEach((row) => {
+      const origin = row.origin_city;
+      const destination = row.destination_city;
+      const ind = row.ind;
+
+      if (ind != 5 ||ind != 7||ind != 13||ind != 14||ind != 15) {
+        if (!cities.destinations[origin]) {
+          cities.destinations[origin] = [];
+        }
+
+        if (!cities.origins.includes(origin)) {
+          cities.origins.push(origin);
+        }
+
+        cities.destinations[origin].push(destination);
+      }
+    });
+
+    return res.json(cities);
+  });
+});
+
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
