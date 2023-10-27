@@ -8,13 +8,24 @@ function App() {
   const [departure, setDeparture] = useState("");
   const [destination, setDestination] = useState("");
   const [results, setResults] = useState([]);
-  const [cities, setCities] = useState({ origins: [], destinations: [] });
+  const [cities, setCities] = useState({
+    origins: [],
+    destinations: [],
+    filteredDestinations: [],
+  });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   useEffect(() => {
-    fetch("https://nuego1-d9f344fa00ee.herokuapp.com")
+    fetch("http://localhost:3000/cities")
       .then((response) => response.json())
-      .then((data) => setCities(data))
+      .then((data) => {
+        console.log("Cities data received:", data);
+        setCities({
+          origins: data.origins,
+          destinations: data.destinations,
+          filteredDestinations: [],
+        });
+      })
       .catch((error) => console.error("Error fetching city data:", error));
   }, []);
 
@@ -23,7 +34,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://nuego1-d9f344fa00ee.herokuapp.com/results?departure=${departure}&destination=${destination}`
+        `http://localhost:3000/results?departure=${departure}&destination=${destination}`
       );
 
       if (!response.ok) {
@@ -34,6 +45,15 @@ function App() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const handleDepartureChange = (e) => {
+    const selectedDeparture = e.target.value;
+    setDeparture(selectedDeparture);
+  
+    const filteredDestinations = [...new Set(cities.destinations[selectedDeparture] || [])];
+    setDestination("");
+    setCities({ ...cities, filteredDestinations });
   };
 
   return (
@@ -60,14 +80,14 @@ function App() {
                     required
                     className="input-field"
                     value={departure}
-                    onChange={(e) => setDeparture(e.target.value)}
-                  >
-                    <option value="">Select Departure</option>
-                    {cities.origins.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
+                    onChange={(e) => handleDepartureChange(e)}
+                    >
+                      <option value="">Select Departure</option>
+                      {cities.origins.map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
                   </select>
                 </div>
                 <div className="input-wrapper">
@@ -83,7 +103,7 @@ function App() {
                     onChange={(e) => setDestination(e.target.value)}
                   >
                     <option value="">Select Destination</option>
-                    {cities.destinations.map((city) => (
+                    {cities.filteredDestinations.map((city) => (
                       <option key={city} value={city}>
                         {city}
                       </option>
@@ -121,7 +141,6 @@ function App() {
                 </button>
               </form>
             </div>
-
           </section>
 
           <section className="search-results">
